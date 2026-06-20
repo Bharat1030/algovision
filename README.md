@@ -1,73 +1,46 @@
-# React + TypeScript + Vite
+# AlgoVision
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive algorithm visualizer that shows step-by-step how sorting algorithms work — built for programmers who want to actually see what their code is doing, not just read about it.
 
-Currently, two official plugins are available:
+## What it does
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Watch a bubble sort run on a randomized array, one comparison and swap at a time
+- Play, pause, step forward/backward through the algorithm
+- Adjust playback speed
+- Load your own custom array (0–100, comma-separated) to test specific cases
+- Live stats: comparison count, swap count, current step
 
-## React Compiler
+## Built with
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React + TypeScript — UI and logic
+- Vite — build tooling and dev server
+- Tailwind CSS v4 — styling
+- Zustand — state management for the visualizer engine
 
-## Expanding the ESLint configuration
+## How it's structured
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The core idea: every algorithm is a pure function that takes an input and returns an array of Step objects — one snapshot per comparison/swap. The UI just plays through that array. This keeps the algorithm logic completely separate from rendering, so adding a new algorithm later means writing one new function, not touching the UI.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+src/
+├── algorithms/    -> step-generator functions (e.g. bubbleSort.ts)
+├── components/    -> BarChart, Controls
+├── store/         -> Zustand store driving playback state
+├── types/         -> shared Step type
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Running it locally
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+npm install
+npm run dev
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then open the local URL it gives you (usually http://localhost:5173).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Roadmap
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- [ ] Synced code panel showing the active line as the algorithm runs
+- [ ] More algorithms: selection sort, quick sort, merge sort
+- [ ] Graph algorithms (BFS, DFS, Dijkstra) with an interactive grid editor
+- [ ] Algorithm picker / dropdown
+
+## License
+
+MIT
