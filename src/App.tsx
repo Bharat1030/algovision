@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BarChart } from './components/BarChart'
 import { Controls } from './components/Controls'
+import { CodePanel } from './components/CodePanel'
 import { useVisualizerStore, ALGORITHMS, type AlgorithmKey } from './store/useVisualizerStore'
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
     <div className="min-h-screen text-ink font-body">
       {/* Header */}
       <header className="border-b border-panel-border">
-        <div className="max-w-5xl mx-auto px-8 h-16 flex items-center">
+        <div className="max-w-6xl mx-auto px-8 h-16 flex items-center">
           <div className="font-mono font-semibold text-sm flex items-center gap-2">
             <span className="w-2 h-2 bg-accent rotate-45 inline-block" />
             ALGOVISION
@@ -33,7 +34,7 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-8 py-12">
+      <main className="max-w-6xl mx-auto px-8 py-12">
         {/* Title block */}
         <div className="border border-panel-border bg-panel p-5 font-mono text-xs text-ink-faint grid grid-cols-3 gap-x-4 gap-y-3 max-w-md mb-10">
           <div>
@@ -80,14 +81,21 @@ function App() {
           </div>
         </div>
 
-        {/* Visualizer panel */}
+        {/* Visualizer panel — two columns */}
         <div className="border border-panel-border bg-panel relative">
           <div className="absolute -top-[11px] left-4 bg-bg px-2 font-mono text-[10px] tracking-wide text-accent">
             FIG. 01 — {algo.name.toUpperCase()}
           </div>
-          <div className="p-6">
-            <BarChart />
-            <Controls />
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px]">
+            {/* Left: bars + controls */}
+            <div className="p-6 border-b lg:border-b-0 lg:border-r border-panel-border">
+              <BarChart />
+              <Controls />
+            </div>
+
+            {/* Right: code panel */}
+            <CodePanel />
           </div>
         </div>
       </main>

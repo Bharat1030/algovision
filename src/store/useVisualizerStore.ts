@@ -9,16 +9,36 @@ export const ALGORITHMS: Record<AlgorithmKey, {
   name: string
   complexity: string
   fn: (arr: number[]) => Step[]
+  code: string[]
 }> = {
   bubble: {
     name: 'Bubble Sort',
     complexity: 'O(n²)',
     fn: bubbleSort,
+    code: [
+      'function bubbleSort(arr) {',
+      '  for (i = 0; i < n - 1; i++) {',
+      '    if (arr[j] > arr[j + 1]) {',
+      '      swap(arr[j], arr[j + 1])',
+      '    }',
+      '  // mark index as sorted',
+      '  return arr',
+      '}',
+    ],
   },
   selection: {
     name: 'Selection Sort',
     complexity: 'O(n²)',
     fn: selectionSort,
+    code: [
+      'function selectionSort(arr) {',
+      '  find minimum in unsorted region',
+      '  if (arr[j] < arr[minIdx]) minIdx = j',
+      '  swap(arr[i], arr[minIdx])',
+      '  mark index i as sorted',
+      '  return arr',
+      '}',
+    ],
   },
 }
 
@@ -33,7 +53,6 @@ interface VisualizerState {
   speed: number
   currentAlgorithm: AlgorithmKey
 
-  // actions
   setAlgorithm: (key: AlgorithmKey) => void
   generateNewArray: (size?: number) => void
   loadCustomArray: (arr: number[]) => void
@@ -96,6 +115,5 @@ export const useVisualizerStore = create<VisualizerState>((set, get) => ({
   },
 
   restart: () => set({ currentStepIndex: 0, isPlaying: false }),
-
   setSpeed: (speed) => set({ speed }),
 }))
