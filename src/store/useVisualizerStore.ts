@@ -1,6 +1,26 @@
 import { create } from 'zustand'
 import type { Step } from '../types'
 import { bubbleSort } from '../algorithms/BubbleSort'
+import { selectionSort } from '../algorithms/SelectionSort'
+
+export type AlgorithmKey = 'bubble' | 'selection'
+
+export const ALGORITHMS: Record<AlgorithmKey, {
+  name: string
+  complexity: string
+  fn: (arr: number[]) => Step[]
+}> = {
+  bubble: {
+    name: 'Bubble Sort',
+    complexity: 'O(n²)',
+    fn: bubbleSort,
+  },
+  selection: {
+    name: 'Selection Sort',
+    complexity: 'O(n²)',
+    fn: selectionSort,
+  },
+}
 
 function randomArray(size: number, max: number): number[] {
   return Array.from({ length: size }, () => 8 + Math.floor(Math.random() * max))
@@ -10,9 +30,11 @@ interface VisualizerState {
   steps: Step[]
   currentStepIndex: number
   isPlaying: boolean
-  speed: number // 1 (slow) to 5 (fast)
+  speed: number
+  currentAlgorithm: AlgorithmKey
 
   // actions
+  setAlgorithm: (key: AlgorithmKey) => void
   generateNewArray: (size?: number) => void
   loadCustomArray: (arr: number[]) => void
   play: () => void
@@ -28,19 +50,33 @@ export const useVisualizerStore = create<VisualizerState>((set, get) => ({
   currentStepIndex: 0,
   isPlaying: false,
   speed: 3,
+  currentAlgorithm: 'bubble',
+
+  setAlgorithm: (key: AlgorithmKey) => {
+    const arr = randomArray(16, 95)
+    const newSteps = ALGORITHMS[key].fn(arr)
+    set({
+      currentAlgorithm: key,
+      steps: newSteps,
+      currentStepIndex: 0,
+      isPlaying: false,
+    })
+  },
 
   generateNewArray: (size = 16) => {
-    const newSteps = bubbleSort(randomArray(size, 95))
+    const { currentAlgorithm } = get()
+    const arr = randomArray(size, 95)
+    const newSteps = ALGORITHMS[currentAlgorithm].fn(arr)
     set({ steps: newSteps, currentStepIndex: 0, isPlaying: false })
   },
 
   loadCustomArray: (arr: number[]) => {
-    const newSteps = bubbleSort(arr)
+    const { currentAlgorithm } = get()
+    const newSteps = ALGORITHMS[currentAlgorithm].fn(arr)
     set({ steps: newSteps, currentStepIndex: 0, isPlaying: false })
   },
 
   play: () => set({ isPlaying: true }),
-
   pause: () => set({ isPlaying: false }),
 
   stepForward: () => {
