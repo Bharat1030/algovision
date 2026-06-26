@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0E2A47;
-  --color-bg-deep: #091D33;
-  --color-panel: #13304E;
-  --color-panel-deep: #0F2740;
-  --color-panel-border: rgba(234, 242, 255, 0.14);
-  --color-ink: #EAF2FF;
-  --color-ink-dim: #90A8C4;
-  --color-ink-faint: #5E7693;
-  --color-accent: #FF6B35;
-  --color-accent-2: #52D8C8;
+  --color-bg: #0A0A0A;
+  --color-bg-deep: #050505;
+  --color-panel: #111111;
+  --color-panel-deep: #0D0D0D;
+  --color-panel-border: rgba(255, 255, 255, 0.08);
+  --color-ink: #F5F5F5;
+  --color-ink-dim: #888888;
+  --color-ink-faint: #444444;
+  --color-accent: #E879F9;
+  --color-accent-2: #34D399;
 
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -19,8 +19,8 @@
 
 body {
   background-image:
-    linear-gradient(rgba(234, 242, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(234, 242, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 32px 32px;
   background-color: var(--color-bg);
 }

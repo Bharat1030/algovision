@@ -2,8 +2,10 @@ import { create } from 'zustand'
 import type { Step } from '../types'
 import { bubbleSort } from '../algorithms/BubbleSort'
 import { selectionSort } from '../algorithms/SelectionSort'
+import { mergeSort } from '../algorithms/MergeSort'
+import { quickSort } from '../algorithms/QuickSort'
 
-export type AlgorithmKey = 'bubble' | 'selection'
+export type AlgorithmKey = 'bubble' | 'selection' | 'merge' | 'quick'
 
 export const ALGORITHMS: Record<AlgorithmKey, {
   name: string
@@ -17,11 +19,9 @@ export const ALGORITHMS: Record<AlgorithmKey, {
     fn: bubbleSort,
     code: [
       'function bubbleSort(arr) {',
-      '  for (i = 0; i < n - 1; i++) {',
-      '    if (arr[j] > arr[j + 1]) {',
-      '      swap(arr[j], arr[j + 1])',
-      '    }',
-      '  // mark index as sorted',
+      '  if (arr[j] > arr[j + 1])',
+      '    swap(arr[j], arr[j + 1])',
+      '  // mark index sorted',
       '  return arr',
       '}',
     ],
@@ -37,6 +37,33 @@ export const ALGORITHMS: Record<AlgorithmKey, {
       '  swap(arr[i], arr[minIdx])',
       '  mark index i as sorted',
       '  return arr',
+      '}',
+    ],
+  },
+  merge: {
+    name: 'Merge Sort',
+    complexity: 'O(n log n)',
+    fn: mergeSort,
+    code: [
+      'function mergeSort(arr) {',
+      '  compare left[i] and right[j]',
+      '  place smaller element into arr',
+      '  merge halves back together',
+      '  return sorted arr',
+      '}',
+    ],
+  },
+  quick: {
+    name: 'Quick Sort',
+    complexity: 'O(n log n)',
+    fn: quickSort,
+    code: [
+      'function quickSort(arr) {',
+      '  compare arr[j] with pivot',
+      '  swap arr[i] and arr[j]',
+      '  place pivot in correct position',
+      '  pivot is now sorted',
+      '  return sorted arr',
       '}',
     ],
   },
