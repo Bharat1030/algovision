@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { BarChart } from './components/BarChart'
 import { Controls } from './components/Controls'
 import { CodePanel } from './components/CodePanel'
+import { ComplexityChart } from './components/ComplexityChart'
 import { useVisualizerStore, ALGORITHMS, type AlgorithmKey } from './store/useVisualizerStore'
 
 function App() {
@@ -14,8 +15,12 @@ function App() {
   const restart = useVisualizerStore((state) => state.restart)
   const currentAlgorithm = useVisualizerStore((state) => state.currentAlgorithm)
   const setAlgorithm = useVisualizerStore((state) => state.setAlgorithm)
+  const steps = useVisualizerStore((state) => state.steps)
+  const currentStepIndex = useVisualizerStore((state) => state.currentStepIndex)
+  const recordRun = useVisualizerStore((state) => state.recordRun)
 
   const algo = ALGORITHMS[currentAlgorithm]
+  const hasRecordedRef = useRef(false)
 
   // Playback tick loop
   useEffect(() => {
@@ -27,10 +32,21 @@ function App() {
     return () => clearInterval(timer)
   }, [isPlaying, speed, stepForward])
 
+  // Record run when sort completes
+  useEffect(() => {
+    if (currentStepIndex === steps.length - 1 && steps.length > 1) {
+      if (!hasRecordedRef.current) {
+        hasRecordedRef.current = true
+        recordRun()
+      }
+    } else {
+      hasRecordedRef.current = false
+    }
+  }, [currentStepIndex, steps, recordRun])
+
   // Keyboard shortcuts
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      // Ignore if user is typing in an input
       if (
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement ||
@@ -99,7 +115,6 @@ function App() {
             <p className="text-ink-dim max-w-md">
               Step through the sort one comparison at a time, or press play and watch it run.
             </p>
-            {/* Keyboard hint */}
             <div className="flex gap-3 mt-3 flex-wrap">
               {[
                 { key: 'Space', label: 'play / pause' },
@@ -149,6 +164,9 @@ function App() {
             <CodePanel />
           </div>
         </div>
+
+        {/* Complexity comparison chart */}
+        <ComplexityChart />
       </main>
     </div>
   )

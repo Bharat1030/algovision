@@ -7,6 +7,15 @@ import { quickSort } from '../algorithms/QuickSort'
 
 export type AlgorithmKey = 'bubble' | 'selection' | 'merge' | 'quick'
 
+export interface RunRecord {
+  algorithm: AlgorithmKey
+  algorithmName: string
+  arraySize: number
+  comparisons: number
+  swaps: number
+  totalOps: number
+}
+
 export const ALGORITHMS: Record<AlgorithmKey, {
   name: string
   complexity: string
@@ -80,11 +89,14 @@ interface VisualizerState {
   speed: number
   arraySize: number
   currentAlgorithm: AlgorithmKey
+  runHistory: RunRecord[]
 
   setAlgorithm: (key: AlgorithmKey) => void
   generateNewArray: (size?: number) => void
   loadCustomArray: (arr: number[]) => void
   setArraySize: (size: number) => void
+  recordRun: () => void
+  clearHistory: () => void
   play: () => void
   pause: () => void
   stepForward: () => void
@@ -100,6 +112,7 @@ export const useVisualizerStore = create<VisualizerState>((set, get) => ({
   speed: 3,
   arraySize: 16,
   currentAlgorithm: 'bubble',
+  runHistory: [],
 
   setAlgorithm: (key: AlgorithmKey) => {
     const { arraySize } = get()
@@ -138,6 +151,23 @@ export const useVisualizerStore = create<VisualizerState>((set, get) => ({
     const newSteps = ALGORITHMS[currentAlgorithm].fn(arr)
     set({ steps: newSteps, currentStepIndex: 0, isPlaying: false })
   },
+
+  recordRun: () => {
+    const { steps, currentAlgorithm, arraySize, runHistory } = get()
+    const lastStep = steps[steps.length - 1]
+    if (!lastStep) return
+    const record: RunRecord = {
+      algorithm: currentAlgorithm,
+      algorithmName: ALGORITHMS[currentAlgorithm].name,
+      arraySize,
+      comparisons: lastStep.comparisons,
+      swaps: lastStep.swaps,
+      totalOps: lastStep.comparisons + lastStep.swaps,
+    }
+    set({ runHistory: [...runHistory, record] })
+  },
+
+  clearHistory: () => set({ runHistory: [] }),
 
   play: () => set({ isPlaying: true }),
   pause: () => set({ isPlaying: false }),
