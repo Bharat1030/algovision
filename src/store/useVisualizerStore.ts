@@ -78,11 +78,13 @@ interface VisualizerState {
   currentStepIndex: number
   isPlaying: boolean
   speed: number
+  arraySize: number
   currentAlgorithm: AlgorithmKey
 
   setAlgorithm: (key: AlgorithmKey) => void
   generateNewArray: (size?: number) => void
   loadCustomArray: (arr: number[]) => void
+  setArraySize: (size: number) => void
   play: () => void
   pause: () => void
   stepForward: () => void
@@ -96,10 +98,12 @@ export const useVisualizerStore = create<VisualizerState>((set, get) => ({
   currentStepIndex: 0,
   isPlaying: false,
   speed: 3,
+  arraySize: 16,
   currentAlgorithm: 'bubble',
 
   setAlgorithm: (key: AlgorithmKey) => {
-    const arr = randomArray(16, 95)
+    const { arraySize } = get()
+    const arr = randomArray(arraySize, 95)
     const newSteps = ALGORITHMS[key].fn(arr)
     set({
       currentAlgorithm: key,
@@ -109,11 +113,24 @@ export const useVisualizerStore = create<VisualizerState>((set, get) => ({
     })
   },
 
-  generateNewArray: (size = 16) => {
+  generateNewArray: (size?: number) => {
+    const { currentAlgorithm, arraySize } = get()
+    const finalSize = size ?? arraySize
+    const arr = randomArray(finalSize, 95)
+    const newSteps = ALGORITHMS[currentAlgorithm].fn(arr)
+    set({ steps: newSteps, currentStepIndex: 0, isPlaying: false })
+  },
+
+  setArraySize: (size: number) => {
     const { currentAlgorithm } = get()
     const arr = randomArray(size, 95)
     const newSteps = ALGORITHMS[currentAlgorithm].fn(arr)
-    set({ steps: newSteps, currentStepIndex: 0, isPlaying: false })
+    set({
+      arraySize: size,
+      steps: newSteps,
+      currentStepIndex: 0,
+      isPlaying: false,
+    })
   },
 
   loadCustomArray: (arr: number[]) => {

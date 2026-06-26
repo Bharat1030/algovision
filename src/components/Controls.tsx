@@ -4,6 +4,7 @@ import { useVisualizerStore } from '../store/useVisualizerStore'
 export function Controls() {
   const isPlaying = useVisualizerStore((state) => state.isPlaying)
   const speed = useVisualizerStore((state) => state.speed)
+  const arraySize = useVisualizerStore((state) => state.arraySize)
   const play = useVisualizerStore((state) => state.play)
   const pause = useVisualizerStore((state) => state.pause)
   const stepForward = useVisualizerStore((state) => state.stepForward)
@@ -12,6 +13,7 @@ export function Controls() {
   const setSpeed = useVisualizerStore((state) => state.setSpeed)
   const generateNewArray = useVisualizerStore((state) => state.generateNewArray)
   const loadCustomArray = useVisualizerStore((state) => state.loadCustomArray)
+  const setArraySize = useVisualizerStore((state) => state.setArraySize)
 
   const [customInput, setCustomInput] = useState('')
 
@@ -28,7 +30,9 @@ export function Controls() {
   }
 
   return (
-    <div className="flex flex-col gap-3 mt-4">
+    <div className="flex flex-col gap-4 mt-4">
+
+      {/* Row 1: playback buttons + speed */}
       <div className="flex items-center gap-3 font-mono text-sm">
         <button
           onClick={restart}
@@ -86,6 +90,21 @@ export function Controls() {
         </button>
       </div>
 
+      {/* Row 2: array size slider */}
+      <div className="flex items-center gap-4 font-mono text-sm text-ink-dim">
+        <span className="shrink-0">size</span>
+        <input
+          type="range"
+          min={4}
+          max={40}
+          value={arraySize}
+          onChange={(e) => setArraySize(Number(e.target.value))}
+          className="flex-1 accent-accent"
+        />
+        <span className="w-6 text-right text-ink">{arraySize}</span>
+      </div>
+
+      {/* Row 3: custom array input */}
       <div className="flex flex-col gap-1.5 w-full font-mono text-sm">
         <div className="flex gap-2 w-full">
           <input
@@ -106,6 +125,7 @@ export function Controls() {
           Accepts comma-separated integers, range 0–100. Out-of-range values are dropped automatically.
         </p>
       </div>
+
     </div>
   )
 }

@@ -8,11 +8,16 @@ function App() {
   const isPlaying = useVisualizerStore((state) => state.isPlaying)
   const speed = useVisualizerStore((state) => state.speed)
   const stepForward = useVisualizerStore((state) => state.stepForward)
+  const stepBackward = useVisualizerStore((state) => state.stepBackward)
+  const play = useVisualizerStore((state) => state.play)
+  const pause = useVisualizerStore((state) => state.pause)
+  const restart = useVisualizerStore((state) => state.restart)
   const currentAlgorithm = useVisualizerStore((state) => state.currentAlgorithm)
   const setAlgorithm = useVisualizerStore((state) => state.setAlgorithm)
 
   const algo = ALGORITHMS[currentAlgorithm]
 
+  // Playback tick loop
   useEffect(() => {
     if (!isPlaying) return
     const delay = 750 - speed * 100
@@ -21,6 +26,40 @@ function App() {
     }, Math.max(delay, 40))
     return () => clearInterval(timer)
   }, [isPlaying, speed, stepForward])
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      // Ignore if user is typing in an input
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        e.target instanceof HTMLSelectElement
+      ) return
+
+      switch (e.key) {
+        case ' ':
+          e.preventDefault()
+          isPlaying ? pause() : play()
+          break
+        case 'ArrowRight':
+          e.preventDefault()
+          stepForward()
+          break
+        case 'ArrowLeft':
+          e.preventDefault()
+          stepBackward()
+          break
+        case 'r':
+        case 'R':
+          restart()
+          break
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isPlaying, play, pause, stepForward, stepBackward, restart])
 
   return (
     <div className="min-h-screen text-ink font-body">
@@ -60,6 +99,22 @@ function App() {
             <p className="text-ink-dim max-w-md">
               Step through the sort one comparison at a time, or press play and watch it run.
             </p>
+            {/* Keyboard hint */}
+            <div className="flex gap-3 mt-3 flex-wrap">
+              {[
+                { key: 'Space', label: 'play / pause' },
+                { key: '→', label: 'step forward' },
+                { key: '←', label: 'step back' },
+                { key: 'R', label: 'restart' },
+              ].map(({ key, label }) => (
+                <span key={key} className="flex items-center gap-1.5 font-mono text-[11px] text-ink-faint">
+                  <kbd className="border border-panel-border bg-panel px-1.5 py-0.5 rounded text-ink-dim">
+                    {key}
+                  </kbd>
+                  {label}
+                </span>
+              ))}
+            </div>
           </div>
 
           {/* Algorithm dropdown */}
@@ -81,20 +136,16 @@ function App() {
           </div>
         </div>
 
-        {/* Visualizer panel — two columns */}
+        {/* Visualizer panel */}
         <div className="border border-panel-border bg-panel relative">
           <div className="absolute -top-[11px] left-4 bg-bg px-2 font-mono text-[10px] tracking-wide text-accent">
             FIG. 01 — {algo.name.toUpperCase()}
           </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px]">
-            {/* Left: bars + controls */}
             <div className="p-6 border-b lg:border-b-0 lg:border-r border-panel-border">
               <BarChart />
               <Controls />
             </div>
-
-            {/* Right: code panel */}
             <CodePanel />
           </div>
         </div>
