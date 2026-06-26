@@ -4,8 +4,10 @@ import type { AlgorithmKey } from '../store/useVisualizerStore'
 const ALGO_COLORS: Record<AlgorithmKey, { bar: string, glow: string, label: string }> = {
   bubble:    { bar: 'bg-red-400',    glow: 'rgba(248,113,113,0.4)',  label: 'text-red-400' },
   selection: { bar: 'bg-orange-400', glow: 'rgba(251,146,60,0.4)',   label: 'text-orange-400' },
+  insertion: { bar: 'bg-yellow-400', glow: 'rgba(250,204,21,0.4)',   label: 'text-yellow-400' },
   merge:     { bar: 'bg-accent',     glow: 'rgba(232,121,249,0.4)',  label: 'text-accent' },
   quick:     { bar: 'bg-accent-2',   glow: 'rgba(52,211,153,0.4)',   label: 'text-accent-2' },
+  heap:      { bar: 'bg-blue-400',   glow: 'rgba(96,165,250,0.4)',   label: 'text-blue-400' },
 }
 
 export function ComplexityChart() {

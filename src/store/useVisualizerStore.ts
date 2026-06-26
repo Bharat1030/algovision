@@ -4,8 +4,10 @@ import { bubbleSort } from '../algorithms/BubbleSort'
 import { selectionSort } from '../algorithms/SelectionSort'
 import { mergeSort } from '../algorithms/MergeSort'
 import { quickSort } from '../algorithms/QuickSort'
+import { insertionSort } from '../algorithms/InsertionSort'
+import { heapSort } from '../algorithms/HeapSort'
 
-export type AlgorithmKey = 'bubble' | 'selection' | 'merge' | 'quick'
+export type AlgorithmKey = 'bubble' | 'selection' | 'merge' | 'quick' | 'insertion' | 'heap'
 
 export interface RunRecord {
   algorithm: AlgorithmKey
@@ -49,6 +51,19 @@ export const ALGORITHMS: Record<AlgorithmKey, {
       '}',
     ],
   },
+  insertion: {
+    name: 'Insertion Sort',
+    complexity: 'O(n²)',
+    fn: insertionSort,
+    code: [
+      'function insertionSort(arr) {',
+      '  compare arr[j] with arr[j-1]',
+      '  swap if arr[j] < arr[j-1]',
+      '  mark current index as sorted',
+      '  return arr',
+      '}',
+    ],
+  },
   merge: {
     name: 'Merge Sort',
     complexity: 'O(n log n)',
@@ -72,6 +87,20 @@ export const ALGORITHMS: Record<AlgorithmKey, {
       '  swap arr[i] and arr[j]',
       '  place pivot in correct position',
       '  pivot is now sorted',
+      '  return sorted arr',
+      '}',
+    ],
+  },
+  heap: {
+    name: 'Heap Sort',
+    complexity: 'O(n log n)',
+    fn: heapSort,
+    code: [
+      'function heapSort(arr) {',
+      '  compare parent with children',
+      '  swap to maintain heap property',
+      '  max heap built successfully',
+      '  extract max and heapify',
       '  return sorted arr',
       '}',
     ],
