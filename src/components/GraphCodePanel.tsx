@@ -23,7 +23,10 @@ interface GraphCodePanelProps {
   currentStepIndex: number
 }
 
-export function GraphCodePanel({ algorithm, currentStep, totalSteps, currentStepIndex }: GraphCodePanelProps) {
+export function GraphCodePanel({
+  algorithm,
+  currentStep,
+}: GraphCodePanelProps) {
   const info = GRAPH_ALGORITHMS[algorithm]
   const code = info.code
   const activeLine = currentStep?.codeLine ?? -1
@@ -52,15 +55,18 @@ export function GraphCodePanel({ algorithm, currentStep, totalSteps, currentStep
               key={index}
               className={`
                 flex gap-4 px-3 py-1 transition-all duration-150 border-l-2
-                ${isActive
-                  ? 'bg-accent/10 border-accent'
-                  : 'border-transparent hover:bg-panel/40'
+                ${
+                  isActive
+                    ? 'bg-accent/10 border-accent'
+                    : 'border-transparent hover:bg-panel/40'
                 }
               `}
             >
-              <span className={`select-none w-4 text-right shrink-0 text-xs mt-0.5 ${
-                isActive ? 'text-accent' : 'text-ink-faint'
-              }`}>
+              <span
+                className={`select-none w-4 text-right shrink-0 text-xs mt-0.5 ${
+                  isActive ? 'text-accent' : 'text-ink-faint'
+                }`}
+              >
                 {index + 1}
               </span>
               <span className={isActive ? 'text-ink' : 'text-ink-dim'}>
@@ -76,18 +82,50 @@ export function GraphCodePanel({ algorithm, currentStep, totalSteps, currentStep
         <span className="w-1.5 h-1.5 rounded-full bg-accent-2 shrink-0 inline-block" />
         <p className="font-mono text-xs text-ink-dim leading-relaxed">
           {!currentStep && 'Draw walls then press Run to begin.'}
-          {currentStep && activeLine === 0 && 'Initializing — setting up the data structure.'}
-          {currentStep && (activeLine === 1 || activeLine === 2) && 'Adding the start node to the data structure.'}
-          {currentStep && activeLine === 3 && `Processing node at (${currentStep.current?.[0]}, ${currentStep.current?.[1]}).`}
-          {currentStep && activeLine === 4 && 'Checking if we reached the end node.'}
-          {currentStep && activeLine === 5 && '✓ End node reached!'}
-          {currentStep && activeLine === 6 && `Marking (${currentStep.current?.[0]}, ${currentStep.current?.[1]}) as visited.`}
-          {currentStep && activeLine === 7 && 'Scanning neighbors of current node.'}
-          {currentStep && activeLine === 8 && 'Tracing path back from end to start.'}
-          {currentStep && activeLine === 9 && `Done — ${currentStep.found ? `path found (${currentStep.pathLength} cells)` : 'no path exists'}.`}
-          {currentStep && activeLine === 10 && `Found shorter path — updating distance for (${currentStep.current?.[0]}, ${currentStep.current?.[1]}).`}
-          {currentStep && activeLine === 12 && 'Highlighting the shortest path.'}
-          {currentStep && activeLine === 13 && `Done — ${currentStep.found ? `shortest path is ${currentStep.pathLength} cells` : 'no path exists'}.`}
+          {currentStep &&
+            activeLine === 0 &&
+            'Initializing — setting up the data structure.'}
+          {currentStep &&
+            (activeLine === 1 || activeLine === 2) &&
+            'Adding the start node to the data structure.'}
+          {currentStep &&
+            activeLine === 3 &&
+            `Processing node at (${currentStep.current?.[0]}, ${currentStep.current?.[1]}).`}
+          {currentStep &&
+            activeLine === 4 &&
+            'Checking if we reached the end node.'}
+          {currentStep &&
+            activeLine === 5 &&
+            '✓ End node reached!'}
+          {currentStep &&
+            activeLine === 6 &&
+            `Marking (${currentStep.current?.[0]}, ${currentStep.current?.[1]}) as visited.`}
+          {currentStep &&
+            activeLine === 7 &&
+            'Scanning neighbors of current node.'}
+          {currentStep &&
+            activeLine === 8 &&
+            'Tracing path back from end to start.'}
+          {currentStep &&
+            activeLine === 9 &&
+            `Done — ${
+              currentStep.found
+                ? `path found (${currentStep.pathLength} cells)`
+                : 'no path exists'
+            }.`}
+          {currentStep &&
+            activeLine === 10 &&
+            `Found shorter path — updating distance for (${currentStep.current?.[0]}, ${currentStep.current?.[1]}).`}
+          {currentStep &&
+            activeLine === 12 &&
+            'Highlighting the shortest path.'}
+          {currentStep &&
+            activeLine === 13 &&
+            `Done — ${
+              currentStep.found
+                ? `shortest path is ${currentStep.pathLength} cells`
+                : 'no path exists'
+            }.`}
         </p>
       </div>
     </div>

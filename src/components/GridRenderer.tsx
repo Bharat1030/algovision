@@ -23,7 +23,6 @@ interface GridRendererProps {
 }
 
 export function GridRenderer({ grid, onCellClick, onCellDrag }: GridRendererProps) {
-  const rows = grid.length
   const cols = grid[0]?.length ?? 0
 
   return (
