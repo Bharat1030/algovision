@@ -24,6 +24,7 @@ export function Visualizer() {
   const algo = ALGORITHMS[currentAlgorithm]
   const hasRecordedRef = useRef(false)
 
+  // Playback tick loop
   useEffect(() => {
     if (!isPlaying) return
     const delay = 750 - speed * 100
@@ -33,6 +34,7 @@ export function Visualizer() {
     return () => clearInterval(timer)
   }, [isPlaying, speed, stepForward])
 
+  // Record run when sort completes
   useEffect(() => {
     if (currentStepIndex === steps.length - 1 && steps.length > 1) {
       if (!hasRecordedRef.current) {
@@ -44,6 +46,7 @@ export function Visualizer() {
     }
   }, [currentStepIndex, steps, recordRun])
 
+  // Keyboard shortcuts
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (
@@ -78,6 +81,7 @@ export function Visualizer() {
 
   return (
     <div className="min-h-screen text-ink font-body">
+      {/* Header */}
       <header className="border-b border-panel-border sticky top-0 z-50 backdrop-blur-sm bg-bg/80">
         <div className="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between">
           <button
@@ -87,9 +91,14 @@ export function Visualizer() {
             <span className="w-2 h-2 bg-accent rotate-45 inline-block" />
             ALGOVISION
           </button>
-          <span className="font-mono text-xs text-ink-faint">
-            {algo.name} · {algo.complexity}
-          </span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/graph')}
+              className="font-mono text-xs text-ink-dim border border-panel-border px-3 py-1.5 hover:border-accent hover:text-ink transition"
+            >
+              Graph →
+            </button>
+          </div>
         </div>
       </header>
 
