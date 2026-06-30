@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Landing } from './pages/Landing'
 import { Visualizer } from './pages/Visualizer'
 import { GraphPage } from './pages/GraphPage'
+import { TreePage } from './pages/TreePage'
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/visualizer" element={<Visualizer />} />
         <Route path="/graph" element={<GraphPage />} />
+        <Route path="/tree" element={<TreePage />} />
       </Routes>
     </BrowserRouter>
   )

@@ -401,9 +401,13 @@ export function Landing() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-panel-border border border-panel-border">
               {CATEGORIES.map((cat) => (
                 <div
-                  key={cat.name}
-                  className="bg-bg p-6 hover:bg-panel transition cursor-pointer group"
-                  onClick={() => navigate('/visualizer')}
+                key={cat.name}
+                className="bg-bg p-6 hover:bg-panel transition cursor-pointer group"
+                onClick={() => navigate(
+                    cat.name === 'Pathfinding' ? '/graph' :
+                    cat.name === 'Graphs' ? '/tree' :
+                    '/visualizer'
+                  )}
                 >
                   {cat.preview}
                   <h3 className="font-display font-semibold text-lg mt-5 mb-1 group-hover:text-accent transition">
