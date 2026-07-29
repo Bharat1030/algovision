@@ -33,8 +33,9 @@ export function GridRenderer({ grid, onCellClick, onCellDrag }: GridRendererProp
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          gridTemplateColumns: `repeat(${cols}, minmax(16px, 1fr))`,
           gap: '2px',
+          minWidth: `${cols * 18}px`,
         }}
       >
         {grid.map((row, r) =>

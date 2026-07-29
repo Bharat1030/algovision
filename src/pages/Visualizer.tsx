@@ -5,6 +5,7 @@ import { Controls } from '../components/Controls'
 import { CodePanel } from '../components/CodePanel'
 import { ComplexityChart } from '../components/ComplexityChart'
 import { useVisualizerStore, ALGORITHMS, type AlgorithmKey } from '../store/useVisualizerStore'
+import { AppNav } from '../components/AppNav'
 
 export function Visualizer() {
   const navigate = useNavigate()
@@ -82,26 +83,8 @@ export function Visualizer() {
   return (
     <div className="min-h-screen text-ink font-body">
       {/* Header */}
-      <header className="border-b border-panel-border sticky top-0 z-50 backdrop-blur-sm bg-bg/80">
-        <div className="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between">
-          <button
-            onClick={() => navigate('/')}
-            className="font-mono font-semibold text-sm flex items-center gap-2 hover:text-accent transition"
-          >
-            <span className="w-2 h-2 bg-accent rotate-45 inline-block" />
-            ALGOVISION
-          </button>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/graph')}
-              className="font-mono text-xs text-ink-dim border border-panel-border px-3 py-1.5 hover:border-accent hover:text-ink transition"
-            >
-              Graph →
-            </button>
-          </div>
-        </div>
-      </header>
-
+     <AppNav />
+     
       <main className="max-w-6xl mx-auto px-8 py-12">
         {/* Title block */}
         <div className="border border-panel-border bg-panel p-5 font-mono text-xs text-ink-faint grid grid-cols-3 gap-x-4 gap-y-3 max-w-md mb-10">

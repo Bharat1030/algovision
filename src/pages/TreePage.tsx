@@ -6,6 +6,7 @@ import { preorder } from '../algorithms/preorder'
 import { postorder } from '../algorithms/postorder'
 import { buildSampleTree, buildBST, TRAVERSALS } from '../types/treeTypes'
 import type { TreeStep, TraversalKey, TreeNode } from '../types/treeTypes'
+import { AppNav } from '../components/AppNav'
 
 const KEYWORDS = ['function', 'if', 'return', 'visit']
 
@@ -137,31 +138,7 @@ export function TreePage() {
 
   return (
     <div className="min-h-screen text-ink font-body">
-      <header className="border-b border-panel-border sticky top-0 z-50 backdrop-blur-sm bg-bg/80">
-        <div className="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between">
-          <button
-            onClick={() => navigate('/')}
-            className="font-mono font-semibold text-sm flex items-center gap-2 hover:text-accent transition"
-          >
-            <span className="w-2 h-2 bg-accent rotate-45 inline-block" />
-            ALGOVISION
-          </button>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/graph')}
-              className="font-mono text-xs text-ink-dim border border-panel-border px-3 py-1.5 hover:border-accent hover:text-ink transition"
-            >
-              Pathfinding →
-            </button>
-            <button
-              onClick={() => navigate('/visualizer')}
-              className="font-mono text-xs text-ink-dim border border-panel-border px-3 py-1.5 hover:border-accent hover:text-ink transition"
-            >
-              Sorting →
-            </button>
-          </div>
-        </div>
-      </header>
+      <AppNav />
 
       <main className="max-w-6xl mx-auto px-8 py-12">
         {/* Title block */}

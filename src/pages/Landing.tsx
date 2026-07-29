@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
+import { useAuthStore } from '../store/authStore'
 
 const NAV_LINKS = ['Algorithms', 'Documentation', 'Benchmarks', 'Community']
 
@@ -202,15 +203,15 @@ const CATEGORIES = [
   },
   {
     name: 'Pathfinding',
-    desc: 'Dijkstra, A*, BFS, Bellman-Ford',
+    desc: 'BFS, DFS, Dijkstra',
     tag: 'O(V + E)',
     tagColor: 'text-blue-400 border-blue-400/30',
     preview: <PathfindingPreview />,
   },
   {
-    name: 'Graphs',
-    desc: 'Trees, AVL, Network Flow, and more',
-    tag: 'O(V log V)',
+    name: 'Tree Traversal',
+    desc: 'In-order, Pre-order, Post-order',
+    tag: 'O(n)',
     tagColor: 'text-accent-2 border-accent-2/30',
     preview: <GraphPreview />,
   },
@@ -304,6 +305,65 @@ function HeroVisualizer() {
   )
 }
 
+/* ---- Auth-aware nav section ---- */
+
+function AuthNav() {
+  const navigate = useNavigate()
+  const { user, signOut, loading } = useAuthStore()
+  const [signingOut, setSigningOut] = useState(false)
+
+  const handleSignOut = async () => {
+    setSigningOut(true)
+    await signOut()
+    setSigningOut(false)
+    navigate('/')
+  }
+
+  // Auth state still resolving on first load — avoid flashing the wrong UI
+  if (loading) {
+    return <div className="w-24 h-8" />
+  }
+
+  if (user) {
+    const displayName =
+      (user.user_metadata?.full_name as string | undefined)?.split(' ')[0] ||
+      user.email?.split('@')[0] ||
+      'Account'
+
+    return (
+      <div className="flex items-center gap-4">
+        <span className="font-mono text-xs text-ink-dim hidden sm:inline">
+          {displayName}
+        </span>
+        <button
+          onClick={handleSignOut}
+          disabled={signingOut}
+          className="font-mono text-xs border border-panel-border text-ink-dim px-4 py-2 hover:border-ink-dim hover:text-ink transition disabled:opacity-50"
+        >
+          {signingOut ? 'Signing out…' : 'Logout'}
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <button
+        onClick={() => navigate('/signin')}
+        className="font-mono text-xs text-ink-dim px-3 py-2 hover:text-ink transition"
+      >
+        Sign In
+      </button>
+      <button
+        onClick={() => navigate('/signup')}
+        className="font-mono text-xs bg-accent text-bg px-4 py-2 font-semibold hover:opacity-90 transition"
+      >
+        Sign Up
+      </button>
+    </div>
+  )
+}
+
 export function Landing() {
   const navigate = useNavigate()
 
@@ -321,12 +381,15 @@ export function Landing() {
               <a key={link} href="#" className="font-mono text-xs text-ink-dim hover:text-ink transition">{link}</a>
             ))}
           </nav>
-          <button
-            onClick={() => navigate('/visualizer')}
-            className="font-mono text-xs bg-accent text-bg px-4 py-2 font-semibold hover:opacity-90 transition"
-          >
-            Launch Visualizer →
-          </button>
+          <div className="flex items-center gap-4">
+            <AuthNav />
+            <button
+              onClick={() => navigate('/visualizer')}
+              className="font-mono text-xs bg-accent text-bg px-4 py-2 font-semibold hover:opacity-90 transition hidden sm:block"
+            >
+              Launch Visualizer →
+            </button>
+          </div>
         </div>
       </header>
 
@@ -404,10 +467,10 @@ export function Landing() {
                 key={cat.name}
                 className="bg-bg p-6 hover:bg-panel transition cursor-pointer group"
                 onClick={() => navigate(
-                    cat.name === 'Pathfinding' ? '/graph' :
-                    cat.name === 'Graphs' ? '/tree' :
-                    '/visualizer'
-                  )}
+                  cat.name === 'Pathfinding' ? '/graph' :
+                  cat.name === 'Tree Traversal' ? '/tree' :
+                  '/visualizer'
+                )}
                 >
                   {cat.preview}
                   <h3 className="font-display font-semibold text-lg mt-5 mb-1 group-hover:text-accent transition">

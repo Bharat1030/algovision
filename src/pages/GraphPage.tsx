@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { GridRenderer } from '../components/GridRenderer'
 import { GraphCodePanel } from '../components/GraphCodePanel'
+import { AppNav } from '../components/AppNav'
 import { bfs } from '../algorithms/bfs'
 import { dfs } from '../algorithms/dfs'
 import { dijkstra } from '../algorithms/dijkstra'
@@ -47,7 +47,6 @@ function resetGridKeepWalls(grid: Cell[][]): Cell[][] {
 }
 
 export function GraphPage() {
-  const navigate = useNavigate()
   const [grid, setGrid] = useState<Cell[][]>(createGrid)
   const [steps, setSteps] = useState<GraphStep[]>([])
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
@@ -172,26 +171,7 @@ export function GraphPage() {
 
   return (
     <div className="min-h-screen text-ink font-body">
-      {/* Header */}
-      <header className="border-b border-panel-border sticky top-0 z-50 backdrop-blur-sm bg-bg/80">
-        <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
-          <button
-            onClick={() => navigate('/')}
-            className="font-mono font-semibold text-sm flex items-center gap-2 hover:text-accent transition"
-          >
-            <span className="w-2 h-2 bg-accent rotate-45 inline-block" />
-            ALGOVISION
-          </button>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/visualizer')}
-              className="font-mono text-xs text-ink-dim border border-panel-border px-3 py-1.5 hover:border-accent hover:text-ink transition"
-            >
-              Sorting →
-            </button>
-          </div>
-        </div>
-      </header>
+      <AppNav />
 
       <main className="max-w-7xl mx-auto px-8 py-10">
         {/* Title block */}
