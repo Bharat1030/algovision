@@ -7,6 +7,7 @@ import { TreePage } from './pages/TreePage'
 import { SignUp } from './pages/SignUp'
 import { SignIn } from './pages/SignIn'
 import { useAuthStore } from './store/authStore'
+import ResetPassword from './pages/ResetPassword'
 
 function App() {
   useEffect(() => {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/tree" element={<TreePage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/reset-password" element={<ResetPassword />}/>
       </Routes>
     </BrowserRouter>
   )

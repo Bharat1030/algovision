@@ -11,13 +11,22 @@ interface FormErrors {
 
 export function SignIn() {
   const navigate = useNavigate()
-  const { signIn, loading, error, clearError } = useAuthStore()
+
+  const {
+    signIn,
+    resetPassword,
+    loading,
+    error,
+    clearError,
+  } = useAuthStore()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<FormErrors>({})
   const [success, setSuccess] = useState(false)
+  const [resetLoading, setResetLoading] = useState(false)
+  const [resetSuccess, setResetSuccess] = useState(false)
 
   const validate = (): boolean => {
     const errors: FormErrors = {}
@@ -33,13 +42,16 @@ export function SignIn() {
     }
 
     setFieldErrors(errors)
+
     return Object.keys(errors).length === 0
   }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+
     clearError()
     setSuccess(false)
+    setResetSuccess(false)
 
     if (!validate()) return
 
@@ -47,7 +59,40 @@ export function SignIn() {
 
     if (result.success) {
       setSuccess(true)
-      setTimeout(() => navigate('/'), 900)
+
+      setTimeout(() => {
+        navigate('/')
+      }, 900)
+    }
+  }
+
+  const handleForgotPassword = async () => {
+    clearError()
+    setResetSuccess(false)
+
+    if (!email.trim()) {
+      setFieldErrors({
+        email: 'Enter your email address first',
+      })
+      return
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setFieldErrors({
+        email: 'Enter a valid email address',
+      })
+      return
+    }
+
+    setFieldErrors({})
+    setResetLoading(true)
+
+    const result = await resetPassword(email.trim())
+
+    setResetLoading(false)
+
+    if (result.success) {
+      setResetSuccess(true)
     }
   }
 
@@ -55,18 +100,22 @@ export function SignIn() {
     <div className="min-h-screen text-ink font-body flex items-center justify-center px-8 py-16">
       <div className="w-full max-w-md">
         <div className="border border-panel-border bg-panel relative">
+
           <div className="absolute -top-[11px] left-4 bg-bg px-2 font-mono text-[10px] text-accent tracking-wide">
             FIG. 03 — SIGN IN
           </div>
 
           <div className="p-8">
+
             <div className="mb-8">
               <span className="font-mono text-[11px] text-accent tracking-widest uppercase">
                 AlgoVision · Auth
               </span>
+
               <h1 className="font-display font-semibold text-3xl mt-3">
                 Welcome back
               </h1>
+
               <p className="text-ink-dim text-sm mt-2 leading-relaxed">
                 Sign in to continue visualizing algorithms.
               </p>
@@ -85,11 +134,21 @@ export function SignIn() {
               </div>
             )}
 
+            {resetSuccess && (
+              <div className="mb-6 border border-accent-2/30 bg-accent-2/5 px-4 py-3 font-mono text-xs text-accent-2 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" />
+                Password reset email sent. Check your inbox.
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} noValidate className="space-y-5">
+
+              {/* Email */}
               <div>
                 <label className="block font-mono text-[10px] uppercase tracking-wide text-ink-dim mb-2">
                   Email
                 </label>
+
                 <input
                   type="email"
                   value={email}
@@ -101,15 +160,33 @@ export function SignIn() {
                   }`}
                   placeholder="you@example.com"
                 />
+
                 {fieldErrors.email && (
-                  <p className="font-mono text-[11px] text-red-400 mt-1.5">{fieldErrors.email}</p>
+                  <p className="font-mono text-[11px] text-red-400 mt-1.5">
+                    {fieldErrors.email}
+                  </p>
                 )}
               </div>
 
+              {/* Password */}
               <div>
-                <label className="block font-mono text-[10px] uppercase tracking-wide text-ink-dim mb-2">
-                  Password
-                </label>
+                <div className="flex items-center justify-between mb-2">
+
+                  <label className="block font-mono text-[10px] uppercase tracking-wide text-ink-dim">
+                    Password
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    disabled={resetLoading}
+                    className="font-mono text-[10px] text-accent hover:opacity-80 transition disabled:opacity-50"
+                  >
+                    {resetLoading ? 'Sending…' : 'Forgot password?'}
+                  </button>
+
+                </div>
+
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -122,20 +199,29 @@ export function SignIn() {
                     }`}
                     placeholder="••••••••"
                   />
+
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink-dim transition"
                     tabIndex={-1}
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
+
                 {fieldErrors.password && (
-                  <p className="font-mono text-[11px] text-red-400 mt-1.5">{fieldErrors.password}</p>
+                  <p className="font-mono text-[11px] text-red-400 mt-1.5">
+                    {fieldErrors.password}
+                  </p>
                 )}
               </div>
 
+              {/* Sign In */}
               <button
                 type="submit"
                 disabled={loading || success}
@@ -155,17 +241,24 @@ export function SignIn() {
                   'Sign In →'
                 )}
               </button>
+
             </form>
           </div>
 
+          {/* Footer */}
           <div className="border-t border-panel-border px-8 py-4 text-center">
             <span className="font-mono text-xs text-ink-faint">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-accent hover:opacity-80 transition">
+
+              <Link
+                to="/signup"
+                className="text-accent hover:opacity-80 transition"
+              >
                 Sign up
               </Link>
             </span>
           </div>
+
         </div>
       </div>
     </div>
